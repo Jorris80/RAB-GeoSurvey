@@ -7,7 +7,7 @@
  *  - Thumbnail foto Google Drive di-cache (runtime) agar bukti tetap tampil offline
  *  - Naikkan VERSION setiap kali index.html diperbarui
  */
-const VERSION = 'gse-v2.0.0';
+const VERSION = 'gse-v2.1.0';
 const SHELL = ['./', './index.html', './manifest.json', './icon-192.png', './icon-512.png'];
 const RUNTIME = 'gse-runtime-v2';
 
