@@ -6,14 +6,21 @@
  *    antrean offline ditangani aplikasi di IndexedDB
  *  - Thumbnail foto Google Drive di-cache (runtime) agar bukti tetap tampil offline
  *  - Naikkan VERSION setiap kali index.html diperbarui
+ *  - v2.1.2: halaman diambil dengan cache:'no-store' (tidak tertahan cache HTTP/CDN),
+ *    aplikasi memeriksa pembaruan saat dibuka/kembali aktif & menampilkan banner "versi baru"
  */
-const VERSION = 'gse-v2.1.0';
+const VERSION = 'gse-v2.1.2';
 const SHELL = ['./', './index.html', './manifest.json', './icon-192.png', './icon-512.png'];
 const RUNTIME = 'gse-runtime-v2';
 
 self.addEventListener('install', (e) => {
-  e.waitUntil(caches.open(VERSION).then((c) => c.addAll(SHELL)));
+  // cache:'reload' → ambil langsung dari jaringan, bukan salinan lama di cache HTTP/CDN
+  e.waitUntil(caches.open(VERSION).then((c) => c.addAll(SHELL.map((u) => new Request(u, { cache: 'reload' })))));
   self.skipWaiting();
+});
+
+self.addEventListener('message', (e) => {
+  if (e.data && e.data.type === 'SKIP_WAITING') self.skipWaiting();
 });
 
 self.addEventListener('activate', (e) => {
@@ -46,7 +53,7 @@ self.addEventListener('fetch', (e) => {
   // Navigasi: network-first → fallback index.html dari cache
   if (req.mode === 'navigate') {
     e.respondWith(
-      fetch(req).then((res) => {
+      fetch(req.url, { cache: 'no-store', credentials: 'same-origin' }).then((res) => {
         const copy = res.clone();
         caches.open(VERSION).then((c) => c.put('./index.html', copy));
         return res;
