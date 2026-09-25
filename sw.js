@@ -9,7 +9,7 @@
  *  - v2.1.2: halaman diambil dengan cache:'no-store' (tidak tertahan cache HTTP/CDN),
  *    aplikasi memeriksa pembaruan saat dibuka/kembali aktif & menampilkan banner "versi baru"
  */
-const VERSION = 'gse-v2.1.3';
+const VERSION = 'gse-v2.1.4';
 const SHELL = ['./', './index.html', './manifest.json', './icon-192.png', './icon-512.png'];
 const RUNTIME = 'gse-runtime-v2';
 
